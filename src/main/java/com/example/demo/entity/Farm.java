@@ -6,8 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 @Entity
- @Table(name="StudentTable")
-public class Student {
+ @Table(name="FarmTable")
+public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,12 +33,12 @@ public class Student {
     }
    
     
-    public Student(Long id, String name, String email) {
+    public Farm(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
         
     }
-    public Student() {
+    public Farm() {
     } 
 }
