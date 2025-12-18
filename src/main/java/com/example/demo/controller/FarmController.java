@@ -1,3 +1,17 @@
+package com.example.demo.controller;
+
+import com.example.demo.dto.FarmRequest;
+import com.example.demo.entity.Farm;
+import com.example.demo.service.FarmService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/farms")
+@RequiredArgsConstructor
+public class FarmController {
 @RestController
 @RequestMapping("/farms")
 @RequiredArgsConstructor
