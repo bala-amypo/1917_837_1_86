@@ -6,6 +6,8 @@ import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.security.JwtTokenProvider;
+
 
 @RestController
 @RequestMapping("/auth")
