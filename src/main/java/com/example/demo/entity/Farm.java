@@ -10,11 +10,11 @@ import lombok.*;
 // @AllArgsConstructor
 public class Farm {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    // @ManyToOne
     private User owner;
 
     private String name;
