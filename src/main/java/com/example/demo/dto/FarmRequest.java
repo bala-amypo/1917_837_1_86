@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import lombok.*;
+
 public class FarmRequest {
 
     private String name;
