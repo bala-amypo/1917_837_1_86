@@ -3,17 +3,15 @@
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Farm {
+public class Crop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private User owner;
-
     private String name;
-    private Double soilPH;
-    private Double waterLevel;
+    private Double suitablePHMin;
+    private Double suitablePHMax;
+    private Double requiredWater;
     private String season;
 }

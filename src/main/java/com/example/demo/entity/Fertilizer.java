@@ -3,17 +3,13 @@
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Farm {
+public class Fertilizer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private User owner;
-
     private String name;
-    private Double soilPH;
-    private Double waterLevel;
-    private String season;
+    private String npkRatio;
+    private String recommendedForCrops; // comma separated
 }

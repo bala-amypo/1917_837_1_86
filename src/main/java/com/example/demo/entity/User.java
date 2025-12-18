@@ -3,17 +3,18 @@
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Farm {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private User owner;
-
     private String name;
-    private Double soilPH;
-    private Double waterLevel;
-    private String season;
+
+    @Column(unique = true)
+    private String email;
+
+    private String password;
+
+    private String role; // USER / ADMIN
 }
