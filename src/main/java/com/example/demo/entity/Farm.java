@@ -4,7 +4,6 @@
 @NoArgsConstructor
 @AllArgsConstructor
 public class Farm {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

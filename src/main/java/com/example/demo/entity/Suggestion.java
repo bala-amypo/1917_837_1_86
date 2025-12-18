@@ -4,7 +4,6 @@
 @NoArgsConstructor
 @AllArgsConstructor
 public class Suggestion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,11 +13,10 @@ public class Suggestion {
 
     private String suggestedCrops;
     private String suggestedFertilizers;
-
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onCreate() {
+    void created() {
         createdAt = LocalDateTime.now();
     }
 }
