@@ -1,11 +1,13 @@
 package com.example.demo.util;
 
+import java.util.List;
+
 public class ValidationUtil {
 
+    private static final List<String> SEASONS =
+            List.of("Kharif", "Rabi", "Summer");
+
     public static boolean validSeason(String season) {
-        return season != null &&
-               (season.equals("Kharif") ||
-                season.equals("Rabi") ||
-                season.equals("Summer"));
+        return SEASONS.contains(season);
     }
 }
