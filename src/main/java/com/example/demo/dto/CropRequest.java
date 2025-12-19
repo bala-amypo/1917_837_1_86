@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CropRequest {
-
     private String name;
     private Double suitablePHMin;
     private Double suitablePHMax;
