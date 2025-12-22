@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
 @Entity
 @Table(name = "users")
 @Data
@@ -26,6 +25,6 @@ public class User {
 
     private String role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Farm> farms;
 }
