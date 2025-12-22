@@ -33,15 +33,19 @@ public class SecurityConfig {
             .sessionManagement(sm ->
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-    .requestMatchers(
-        "/auth/**",
-        "/swagger-ui/**",
-        "/v3/api-docs/**",
-        "/catalog/**"
-    ).permitAll()
-    .anyRequest().authenticated()
-)
+                // Public endpoints
+                .requestMatchers(
+                        "/auth/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
+                ).permitAll()
 
+                // ADMIN only
+                .requestMatchers("/catalog/**").hasRole("ADMIN")
+
+                // All other APIs need login
+                .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtFilter,
                     UsernamePasswordAuthenticationFilter.class);
 
