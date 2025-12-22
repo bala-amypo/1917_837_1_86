@@ -22,7 +22,12 @@
     </properties>
 
     <dependencies>
-        
+        <!-- REMOVE THIS -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
 
         <!-- Web -->
         <dependency>
