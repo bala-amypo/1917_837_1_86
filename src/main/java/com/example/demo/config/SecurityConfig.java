@@ -34,15 +34,16 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         .sessionManagement(sm ->
             sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                "/auth/**",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/catalog/**",
-                "/suggestions/**"   // ✅ add this
-            ).permitAll()
-            .anyRequest().authenticated()
-        )
+    .requestMatchers(
+        "/auth/**",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/catalog/**",
+        "/farms/**",       
+        "/suggestions/**"  
+    ).permitAll()
+    .anyRequest().authenticated()
+)
         .addFilterBefore(jwtFilter,
             UsernamePasswordAuthenticationFilter.class);
 
