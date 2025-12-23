@@ -19,8 +19,7 @@ public class SecurityConfig {
     public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
-
-    // ✅ KEEP ONLY THIS PasswordEncoder
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
