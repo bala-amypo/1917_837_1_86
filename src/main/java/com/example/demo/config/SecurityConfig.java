@@ -20,6 +20,7 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+    // ✅ KEEP ONLY THIS PasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -33,17 +34,16 @@ public class SecurityConfig {
             .sessionManagement(sm ->
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-    .requestMatchers(
-        "/auth/**",
-        "/swagger-ui/**",
-        "/v3/api-docs/**",
-        "/catalog/**"
-    ).permitAll()
-    .anyRequest().authenticated()
-)
-
+                .requestMatchers(
+                    "/auth/**",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/catalog/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtFilter,
-                    UsernamePasswordAuthenticationFilter.class);
+                UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
