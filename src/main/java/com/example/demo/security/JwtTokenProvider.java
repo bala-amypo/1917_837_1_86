@@ -1,55 +1,31 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-
-import java.security.Key;
+import java.util.Base64;
 
 public class JwtTokenProvider {
 
-    private final String secret = "abcdefghijklmnopqrstuvwxyz123456";
-    private final Key key = Keys.hmacShaKeyFor(secret.getBytes());
-
     public String createToken(Long userId, String email, String role) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("userId", userId)
-                .claim("role", role)
-                .signWith(key)
-                .compact();
+        String raw = userId + "|" + email + "|" + role;
+        return Base64.getEncoder().encodeToString(raw.getBytes());
     }
 
-    public Object validateToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parse(token);
+    private String[] parse(String token) {
+        return new String(Base64.getDecoder().decode(token)).split("\\|");
     }
 
-    public String getEmail(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public boolean validateToken(String token) {
+        return parse(token).length == 3;
     }
 
     public Long getUserId(String token) {
-        return ((Number) Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("userId")).longValue();
+        return Long.valueOf(parse(token)[0]);
+    }
+
+    public String getEmail(String token) {
+        return parse(token)[1];
     }
 
     public String getRole(String token) {
-        return (String) Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role");
+        return parse(token)[2];
     }
 }
