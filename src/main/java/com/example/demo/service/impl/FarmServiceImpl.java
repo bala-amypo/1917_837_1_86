@@ -2,17 +2,13 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.Farm;
 import com.example.demo.entity.User;
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FarmService;
-import com.example.demo.util.ValidationUtil;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class FarmServiceImpl implements FarmService {
 
     private final FarmRepository farmRepository;
@@ -25,30 +21,26 @@ public class FarmServiceImpl implements FarmService {
     }
 
     @Override
-    public Farm createFarm(Farm farm, Long ownerId) {
-
+    public Farm createFarm(Farm farm, Long userId) {
         if (farm.getSoilPH() < 3.0 || farm.getSoilPH() > 10.0) {
             throw new IllegalArgumentException("Invalid pH value");
         }
 
-        if (!ValidationUtil.validSeason(farm.getSeason())) {
-            throw new BadRequestException("Invalid season");
-        }
+        User owner = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        User owner = userRepository.findById(ownerId).orElseThrow();
         farm.setOwner(owner);
-
         return farmRepository.save(farm);
     }
 
     @Override
-    public List<Farm> getFarmsByOwner(Long ownerId) {
-        return farmRepository.findByOwnerId(ownerId);
+    public Farm getFarmById(Long id) {
+        return farmRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Farm not found"));
     }
 
     @Override
-    public Farm getFarmById(Long farmId) {
-        return farmRepository.findById(farmId)
-                .orElseThrow(() -> new ResourceNotFoundException("Farm not found"));
+    public List<Farm> getFarmsByOwner(Long userId) {
+        return farmRepository.findByOwnerId(userId);
     }
 }

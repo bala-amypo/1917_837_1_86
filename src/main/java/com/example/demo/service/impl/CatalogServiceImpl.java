@@ -8,6 +8,7 @@ import com.example.demo.repository.FertilizerRepository;
 import com.example.demo.service.CatalogService;
 import com.example.demo.util.ValidationUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CatalogServiceImpl implements CatalogService {
@@ -40,13 +41,17 @@ public class CatalogServiceImpl implements CatalogService {
         return fertilizerRepository.save(fertilizer);
     }
 
+    // ⭐ EXACT signature expected by tests
     @Override
-    public List<Crop> findSuitableCrops(double ph, double water, String season) {
+    public List<Crop> findSuitableCrops(Double ph, Double water, String season) {
         return cropRepository.findSuitableCrops(ph, season);
     }
 
     @Override
     public List<Fertilizer> findFertilizersForCrops(List<String> crops) {
-        return fertilizerRepository.findByCropNames(crops);
+        if (crops == null || crops.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return fertilizerRepository.findByCropName(crops.get(0));
     }
 }

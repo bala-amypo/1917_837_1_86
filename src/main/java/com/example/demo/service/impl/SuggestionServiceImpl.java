@@ -8,12 +8,10 @@ import com.example.demo.repository.SuggestionRepository;
 import com.example.demo.service.CatalogService;
 import com.example.demo.service.FarmService;
 import com.example.demo.service.SuggestionService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 public class SuggestionServiceImpl implements SuggestionService {
 
     private final FarmService farmService;
@@ -39,8 +37,9 @@ public class SuggestionServiceImpl implements SuggestionService {
                 farm.getSeason()
         );
 
-        List<String> cropNames =
-                crops.stream().map(Crop::getName).toList();
+        List<String> cropNames = crops.stream()
+                .map(Crop::getName)
+                .collect(Collectors.toList());
 
         List<Fertilizer> fertilizers =
                 catalogService.findFertilizersForCrops(cropNames);
@@ -51,17 +50,19 @@ public class SuggestionServiceImpl implements SuggestionService {
                 .suggestedFertilizers(
                         fertilizers.stream()
                                 .map(Fertilizer::getName)
-                                .collect(Collectors.joining(",")))
+                                .collect(Collectors.joining(","))
+                )
                 .build();
 
         return suggestionRepository.save(suggestion);
     }
 
     @Override
-    public Suggestion getSuggestion(Long suggestionId) {
-        return suggestionRepository.findById(suggestionId).orElseThrow();
+    public Suggestion getSuggestion(Long id) {
+        return suggestionRepository.findById(id).orElse(null);
     }
 
+    // ⭐ REQUIRED BY INTERFACE
     @Override
     public List<Suggestion> getSuggestionsByFarm(Long farmId) {
         return suggestionRepository.findByFarmId(farmId);

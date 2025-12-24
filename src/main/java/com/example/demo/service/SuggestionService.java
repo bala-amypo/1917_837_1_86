@@ -8,7 +8,7 @@ public interface SuggestionService {
 
     Suggestion generateSuggestion(Long farmId);
 
-    Suggestion getSuggestion(Long suggestionId);
+    Suggestion getSuggestion(Long id);
 
     List<Suggestion> getSuggestionsByFarm(Long farmId);
 }
