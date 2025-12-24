@@ -1,16 +1,17 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
+import com.example.demo.entity.Crop;
 import com.example.demo.entity.Farm;
+import com.example.demo.entity.Fertilizer;
 import com.example.demo.entity.Suggestion;
 import com.example.demo.repository.SuggestionRepository;
 import com.example.demo.service.CatalogService;
 import com.example.demo.service.FarmService;
 import com.example.demo.service.SuggestionService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SuggestionServiceImpl implements SuggestionService {
@@ -32,28 +33,25 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         Farm farm = farmService.getFarmById(farmId);
 
-        var crops = catalogService.findSuitableCrops(
+        List<Crop> crops = catalogService.findSuitableCrops(
                 farm.getSoilPH(),
                 farm.getWaterLevel(),
                 farm.getSeason()
         );
 
-        List<String> cropNames = crops.stream()
-                .map(c -> c.getName())
-                .collect(Collectors.toList());
+        List<String> cropNames =
+                crops.stream().map(Crop::getName).toList();
 
-        var fertilizers = catalogService.findFertilizersForCrops(cropNames);
-
-        String cropStr = String.join(",", cropNames);
-
-        String fertStr = fertilizers.stream()
-                .map(f -> f.getName())
-                .collect(Collectors.joining(","));
+        List<Fertilizer> fertilizers =
+                catalogService.findFertilizersForCrops(cropNames);
 
         Suggestion suggestion = Suggestion.builder()
                 .farm(farm)
-                .suggestedCrops(cropStr)
-                .suggestedFertilizers(fertStr)
+                .suggestedCrops(String.join(",", cropNames))
+                .suggestedFertilizers(
+                        fertilizers.stream()
+                                .map(Fertilizer::getName)
+                                .collect(Collectors.joining(",")))
                 .build();
 
         return suggestionRepository.save(suggestion);
@@ -61,8 +59,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public Suggestion getSuggestion(Long suggestionId) {
-        return suggestionRepository.findById(suggestionId)
-                .orElseThrow(() -> new RuntimeException("Suggestion not found"));
+        return suggestionRepository.findById(suggestionId).orElseThrow();
     }
 
     @Override

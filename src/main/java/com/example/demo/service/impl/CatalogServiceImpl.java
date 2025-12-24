@@ -1,10 +1,5 @@
 package com.example.demo.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.Crop;
 import com.example.demo.entity.Fertilizer;
 import com.example.demo.exception.BadRequestException;
@@ -12,12 +7,20 @@ import com.example.demo.repository.CropRepository;
 import com.example.demo.repository.FertilizerRepository;
 import com.example.demo.service.CatalogService;
 import com.example.demo.util.ValidationUtil;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class CatalogServiceImpl implements CatalogService {
 
     private final CropRepository cropRepository;
     private final FertilizerRepository fertilizerRepository;
+
+    private static final Pattern NPK_PATTERN =
+            Pattern.compile("\\d+-\\d+-\\d+");
 
     public CatalogServiceImpl(CropRepository cropRepository,
                               FertilizerRepository fertilizerRepository) {
@@ -29,7 +32,7 @@ public class CatalogServiceImpl implements CatalogService {
     public Crop addCrop(Crop crop) {
 
         if (crop.getSuitablePHMin() > crop.getSuitablePHMax()) {
-            throw new BadRequestException("PH min greater than max");
+            throw new BadRequestException("PH min must be <= PH max");
         }
 
         if (!ValidationUtil.validSeason(crop.getSeason())) {
@@ -42,7 +45,7 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public Fertilizer addFertilizer(Fertilizer fertilizer) {
 
-        if (!fertilizer.getNpkRatio().matches("\\d+-\\d+-\\d+")) {
+        if (!NPK_PATTERN.matcher(fertilizer.getNpkRatio()).matches()) {
             throw new BadRequestException("Invalid NPK format");
         }
 
@@ -50,8 +53,10 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public List<Crop> findSuitableCrops(Double ph, Double waterLevel, String season) {
-        return cropRepository.findSuitableCrops(ph, waterLevel, season);
+    public List<Crop> findSuitableCrops(Double ph,
+                                        Double waterLevel,
+                                        String season) {
+        return cropRepository.findSuitableCrops(ph, season);
     }
 
     @Override
@@ -60,9 +65,7 @@ public class CatalogServiceImpl implements CatalogService {
         List<Fertilizer> result = new ArrayList<>();
 
         for (String crop : cropNames) {
-            result.addAll(
-                fertilizerRepository.findByRecommendedForCropsContaining(crop)
-            );
+            result.addAll(fertilizerRepository.findByCropName(crop));
         }
 
         return result;
