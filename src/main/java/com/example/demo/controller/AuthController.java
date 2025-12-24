@@ -16,26 +16,26 @@ public class AuthController {
     private final UserService userService;
     private final JwtTokenProvider jwt;
 
-    public AuthController(UserService u, JwtTokenProvider j) {
-        this.userService = u;
-        this.jwt = j;
+    public AuthController(UserService userService, JwtTokenProvider jwt) {
+        this.userService = userService;
+        this.jwt = jwt;
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest r) {
 
-        User user = User.builder()
-                .name(r.getName())
-                .email(r.getEmail())
-                .password(r.getPassword())
-                .role("USER")
-                .build();
+        User user = new User();
+        user.setRole("USER");
+        user.setPassword(r.getPassword());
+        user.setRole("USER");
+
+        user = new User(null, r.getName(), r.getEmail(), r.getPassword(), "USER");
 
         return ResponseEntity.ok(userService.register(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest r) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest r) {
 
         User user = userService.findByEmail(r.getEmail());
         if (user == null) {
@@ -46,7 +46,12 @@ public class AuthController {
             return ResponseEntity.status(401).build();
         }
 
-        String token = jwt.createToken(user.getId(), user.getEmail(), user.getRole());
+        String token = jwt.createToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

@@ -17,13 +17,13 @@ public class CatalogController {
 
     private final CatalogService service;
 
-    public CatalogController(CatalogService s) {
-        this.service = s;
+    public CatalogController(CatalogService service) {
+        this.service = service;
     }
 
     private boolean isAdmin(Authentication auth) {
         for (GrantedAuthority a : auth.getAuthorities()) {
-            if (a.getAuthority().equals("ROLE_ADMIN")) return true;
+            if ("ROLE_ADMIN".equals(a.getAuthority())) return true;
         }
         return false;
     }
@@ -35,15 +35,14 @@ public class CatalogController {
             return ResponseEntity.status(403).build();
         }
 
-        Crop c = Crop.builder()
-                .name(r.getName())
-                .suitablePHMin(r.getPhMin())
-                .suitablePHMax(r.getPhMax())
-                .requiredWater(r.getWater())
-                .season(r.getSeason())
-                .build();
+        Crop crop = new Crop();
+        crop.setName(r.getName());
+        crop.setSuitablePHMin(r.getPhMin());
+        crop.setSuitablePHMax(r.getPhMax());
+        crop.setRequiredWater(r.getWater());
+        crop.setSeason(r.getSeason());
 
-        return ResponseEntity.ok(service.addCrop(c));
+        return ResponseEntity.ok(service.addCrop(crop));
     }
 
     @PostMapping("/fertilizer")
@@ -53,11 +52,10 @@ public class CatalogController {
             return ResponseEntity.status(403).build();
         }
 
-        Fertilizer f = Fertilizer.builder()
-                .name(r.getName())
-                .npkRatio(r.getNpkRatio())
-                .recommendedForCrops(r.getRecommendedForCrops())
-                .build();
+        Fertilizer f = new Fertilizer();
+        f.setName(r.getName());
+        f.setNpkRatio(r.getNpkRatio());
+        f.setRecommendedForCrops(r.getRecommendedForCrops());
 
         return ResponseEntity.ok(service.addFertilizer(f));
     }

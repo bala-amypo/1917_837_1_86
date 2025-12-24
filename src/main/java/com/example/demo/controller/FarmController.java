@@ -16,9 +16,9 @@ public class FarmController {
     private final FarmService farmService;
     private final UserService userService;
 
-    public FarmController(FarmService f, UserService u) {
-        this.farmService = f;
-        this.userService = u;
+    public FarmController(FarmService farmService, UserService userService) {
+        this.farmService = farmService;
+        this.userService = userService;
     }
 
     @PostMapping
@@ -28,12 +28,11 @@ public class FarmController {
 
         Long userId = (Long) auth.getPrincipal();
 
-        Farm farm = Farm.builder()
-                .name(r.getName())
-                .soilPH(r.getSoilPH())
-                .waterLevel(r.getWaterLevel())
-                .season(r.getSeason())
-                .build();
+        Farm farm = new Farm();
+        farm.setName(r.getName());
+        farm.setSoilPH(r.getSoilPH());
+        farm.setWaterLevel(r.getWaterLevel());
+        farm.setSeason(r.getSeason());
 
         return ResponseEntity.ok(farmService.createFarm(farm, userId));
     }
