@@ -6,14 +6,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
+// @Configuration
+// public class SwaggerConfig {
+
+//     @Bean
+//     public OpenAPI customOpenAPI() {
+//         return new OpenAPI()
+//                 .servers(List.of(
+//                         new Server().url("https://9305.408procr.amypo.ai/")
+//                 ));
+//         }
+// }
+
 @Configuration
 public class SwaggerConfig {
-
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .servers(List.of(
-                        new Server().url("https://9305.408procr.amypo.ai/")
-                ));
-        }
+    public Object api() {
+        return new Object();
+    }
 }
