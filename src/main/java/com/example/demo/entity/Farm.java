@@ -22,3 +22,4 @@ public class Farm {
     @ManyToOne
     private User owner;
 }
+

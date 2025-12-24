@@ -2,7 +2,9 @@
 package com.example.demo.dto;
 import lombok.*;
 
-@Data @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CropRequest {
     private String name;
     private double phMin;
@@ -10,3 +12,4 @@ public class CropRequest {
     private double water;
     private String season;
 }
+
