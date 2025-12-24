@@ -1,14 +1,11 @@
+// FarmRequest.java
 package com.example.demo.dto;
-
 import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @AllArgsConstructor
 public class FarmRequest {
     private String name;
-    private Double soilPH;
-    private Double waterLevel;
+    private double soilPH;
+    private double waterLevel;
     private String season;
 }

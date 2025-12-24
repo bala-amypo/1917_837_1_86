@@ -1,15 +1,12 @@
+// CropRequest.java
 package com.example.demo.dto;
-
 import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @AllArgsConstructor
 public class CropRequest {
     private String name;
-    private Double suitablePHMin;
-    private Double suitablePHMax;
-    private Double requiredWater;
+    private double phMin;
+    private double phMax;
+    private double water;
     private String season;
 }

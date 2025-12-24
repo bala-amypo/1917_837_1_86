@@ -1,42 +1,31 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.User;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+import com.example.demo.entity.*;
+import com.example.demo.exception.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repo;
     private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder encoder) {
-        this.userRepository = userRepository;
-        this.encoder = encoder;
+    public UserServiceImpl(UserRepository r, PasswordEncoder e) {
+        repo = r; encoder = e;
     }
 
-    @Override
-    public User register(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public User register(User u) {
+        if (repo.findByEmail(u.getEmail()).isPresent())
             throw new BadRequestException("Email already exists");
-        }
-        user.setPassword(encoder.encode(user.getPassword()));
-        if (user.getRole() == null) {
-            user.setRole("USER");
-        }
-        return userRepository.save(user);
+        u.setPassword(encoder.encode(u.getPassword()));
+        return repo.save(u);
     }
 
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
+    public User findByEmail(String email) { return repo.findByEmail(email).orElse(null); }
 
-    @Override
     public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("User not found"));
+        return repo.findById(id)
+                .orElseThrow(() -> new BadRequestException("Invalid user"));
     }
 }

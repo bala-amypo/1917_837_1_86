@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "fertilizers")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Fertilizer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     private String name;
