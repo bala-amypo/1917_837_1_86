@@ -3,10 +3,12 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.*;
 import com.example.demo.repository.SuggestionRepository;
 import com.example.demo.service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class SuggestionServiceImpl implements SuggestionService {
 
     private final FarmService farmService;
@@ -17,7 +19,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             FarmService farmService,
             CatalogService catalogService,
             SuggestionRepository repo) {
-
         this.farmService = farmService;
         this.catalogService = catalogService;
         this.repo = repo;
@@ -29,26 +30,21 @@ public class SuggestionServiceImpl implements SuggestionService {
         Farm farm = farmService.getFarmById(farmId);
 
         List<Crop> crops = catalogService.findSuitableCrops(
-                farm.getSoilPH(),
-                farm.getWaterLevel(),
-                farm.getSeason()
-        );
+                farm.getSoilPH(), farm.getWaterLevel(), farm.getSeason());
 
         List<String> cropNames = crops.stream()
-                .map(Crop::getName)
-                .collect(Collectors.toList());
+                .map(Crop::getName).collect(Collectors.toList());
 
-        List<Fertilizer> fertilizers =
+        List<Fertilizer> ferts =
                 catalogService.findFertilizersForCrops(cropNames);
 
-        Suggestion s = new Suggestion();
-        s.setFarm(farm);
-        s.setSuggestedCrops(String.join(",", cropNames));
-        s.setSuggestedFertilizers(
-                fertilizers.stream()
-                        .map(Fertilizer::getName)
-                        .collect(Collectors.joining(","))
-        );
+        Suggestion s = Suggestion.builder()
+                .farm(farm)
+                .suggestedCrops(String.join(",", cropNames))
+                .suggestedFertilizers(
+                        ferts.stream().map(Fertilizer::getName)
+                                .collect(Collectors.joining(",")))
+                .build();
 
         return repo.save(s);
     }

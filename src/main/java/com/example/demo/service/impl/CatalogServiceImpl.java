@@ -1,22 +1,26 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.Crop;
+import com.example.demo.entity.Fertilizer;
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.repository.*;
+import com.example.demo.repository.CropRepository;
+import com.example.demo.repository.FertilizerRepository;
 import com.example.demo.service.CatalogService;
 import com.example.demo.util.ValidationUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CatalogServiceImpl implements CatalogService {
 
     private final CropRepository cropRepo;
     private final FertilizerRepository fertRepo;
 
-    public CatalogServiceImpl(CropRepository c, FertilizerRepository f) {
-        this.cropRepo = c;
-        this.fertRepo = f;
+    public CatalogServiceImpl(CropRepository cropRepo, FertilizerRepository fertRepo) {
+        this.cropRepo = cropRepo;
+        this.fertRepo = fertRepo;
     }
 
     @Override
@@ -31,11 +35,11 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public Fertilizer addFertilizer(Fertilizer fert) {
-        if (!fert.getNpkRatio().matches("\\d+-\\d+-\\d+")) {
+    public Fertilizer addFertilizer(Fertilizer fertilizer) {
+        if (!fertilizer.getNpkRatio().matches("\\d+-\\d+-\\d+")) {
             throw new BadRequestException("NPK");
         }
-        return fertRepo.save(fert);
+        return fertRepo.save(fertilizer);
     }
 
     @Override
