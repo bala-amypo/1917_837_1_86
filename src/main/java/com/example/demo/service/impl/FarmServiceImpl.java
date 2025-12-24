@@ -21,21 +21,15 @@ public class FarmServiceImpl implements FarmService {
         this.userRepo = userRepo;
     }
 
-    @Override
     public Farm createFarm(Farm farm, Long ownerId) {
-        User owner = userRepo.findById(ownerId)
-                .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
-        farm.setOwner(owner);
+        farm.setOwner(userRepo.findById(ownerId).orElse(null));
         return farmRepo.save(farm);
     }
 
-    @Override
     public Farm getFarmById(Long id) {
-        return farmRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Farm not found"));
+        return farmRepo.findById(id).orElse(null);
     }
 
-    @Override
     public List<Farm> getFarmsByOwner(Long ownerId) {
         return farmRepo.findByOwnerId(ownerId);
     }
