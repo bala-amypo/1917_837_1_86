@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.*;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -15,49 +14,39 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwt;
 
-    public AuthController(UserService userService,
-                          JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthController(UserService u, JwtTokenProvider j) {
+        this.userService = u;
+        this.jwt = j;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<User> register(@RequestBody RegisterRequest r) {
 
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(request.getPassword())
+                .name(r.getName())
+                .email(r.getEmail())
+                .password(r.getPassword())
+                .role("USER")
                 .build();
 
         return ResponseEntity.ok(userService.register(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest r) {
 
-        User user = userService.findByEmail(request.getEmail());
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+        User user = userService.findByEmail(r.getEmail());
+        if (user == null) {
             return ResponseEntity.status(401).build();
         }
 
-        String token = jwtTokenProvider.createToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        );
+        if (!new BCryptPasswordEncoder().matches(r.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(401).build();
+        }
 
-        return ResponseEntity.ok(
-                new AuthResponse(
-                        token,
-                        user.getId(),
-                        user.getEmail(),
-                        user.getRole()
-                )
-        );
+        String token = jwt.createToken(user.getId(), user.getEmail(), user.getRole());
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }
