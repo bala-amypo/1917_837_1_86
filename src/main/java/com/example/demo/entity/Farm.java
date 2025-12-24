@@ -1,13 +1,20 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Farm {
 
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
     private double soilPH;
     private double waterLevel;
@@ -15,13 +22,4 @@ public class Farm {
 
     @ManyToOne
     private User owner;
-
-    public Farm() {}
-
-    public Long getId() { return id; }
-    public double getSoilPH() { return soilPH; }
-    public double getWaterLevel() { return waterLevel; }
-    public String getSeason() { return season; }
-
-    public void setOwner(User u) { this.owner = u; }
 }
