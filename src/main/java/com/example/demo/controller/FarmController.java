@@ -21,26 +21,37 @@ public class FarmController {
         this.userService = userService;
     }
 
+    /**
+     * Create farm for logged-in user
+     * Test uses: auth.getPrincipal() → Long userId
+     */
     @PostMapping
     public ResponseEntity<Farm> createFarm(
-            @RequestBody FarmRequest r,
-            Authentication auth) {
+            @RequestBody FarmRequest request,
+            Authentication authentication) {
 
-        Long userId = (Long) auth.getPrincipal();
+        Long userId = (Long) authentication.getPrincipal();
 
         Farm farm = new Farm();
-        farm.setName(r.getName());
-        farm.setSoilPH(r.getSoilPH());
-        farm.setWaterLevel(r.getWaterLevel());
-        farm.setSeason(r.getSeason());
+        farm.setName(request.getName());
+        farm.setSoilPH(request.getSoilPH());
+        farm.setWaterLevel(request.getWaterLevel());
+        farm.setSeason(request.getSeason());
 
-        return ResponseEntity.ok(farmService.createFarm(farm, userId));
+        return ResponseEntity.ok(
+                farmService.createFarm(farm, userId)
+        );
     }
 
+    /**
+     * List farms for logged-in user
+     */
     @GetMapping
-    public ResponseEntity<?> listFarms(Authentication auth) {
+    public ResponseEntity<?> listFarms(Authentication authentication) {
 
-        Long userId = (Long) auth.getPrincipal();
-        return ResponseEntity.ok(farmService.getFarmsByOwner(userId));
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                farmService.getFarmsByOwner(userId)
+        );
     }
 }
