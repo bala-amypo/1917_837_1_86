@@ -17,17 +17,18 @@ public class Suggestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
 
     private String suggestedCrops;
-
     private String suggestedFertilizers;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onCreate() {
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 }
