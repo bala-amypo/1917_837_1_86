@@ -12,8 +12,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
 
     public UserServiceImpl(UserRepository r, PasswordEncoder e) {
-        repo = r;
-        encoder = e;
+        this.repo = r;
+        this.encoder = e;
     }
 
     @Override
