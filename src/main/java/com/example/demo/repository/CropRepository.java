@@ -1,23 +1,13 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Crop;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface CropRepository extends JpaRepository<Crop, Long> {
 
-    // Custom HQL query (tests mock this method)
-    @Query("""
-        SELECT c FROM Crop c
-        WHERE c.suitablePHMin <= :ph
-        AND c.suitablePHMax >= :ph
-        AND c.season = :season
-    """)
-    List<Crop> findSuitableCrops(
-            @Param("ph") Double ph,
-            @Param("season") String season
-    );
+    @Query("from Crop c where :ph between c.suitablePHMin and c.suitablePHMax and c.season=:season")
+    List<Crop> findSuitableCrops(double ph, String season);
 }

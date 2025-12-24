@@ -1,14 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Crop;
-import com.example.demo.entity.Farm;
-import com.example.demo.entity.Fertilizer;
-import com.example.demo.entity.Suggestion;
-import com.example.demo.repository.SuggestionRepository;
-import com.example.demo.service.CatalogService;
-import com.example.demo.service.FarmService;
-import com.example.demo.service.SuggestionService;
-
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,14 +10,12 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private final FarmService farmService;
     private final CatalogService catalogService;
-    private final SuggestionRepository suggestionRepository;
+    private final SuggestionRepository repo;
 
-    public SuggestionServiceImpl(FarmService farmService,
-                                 CatalogService catalogService,
-                                 SuggestionRepository suggestionRepository) {
-        this.farmService = farmService;
-        this.catalogService = catalogService;
-        this.suggestionRepository = suggestionRepository;
+    public SuggestionServiceImpl(FarmService f, CatalogService c, SuggestionRepository r) {
+        this.farmService = f;
+        this.catalogService = c;
+        this.repo = r;
     }
 
     @Override
@@ -39,32 +31,25 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         List<String> cropNames = crops.stream()
                 .map(Crop::getName)
-                .collect(Collectors.toList());
+                .toList();
 
-        List<Fertilizer> fertilizers =
-                catalogService.findFertilizersForCrops(cropNames);
+        List<Fertilizer> ferts = catalogService.findFertilizersForCrops(cropNames);
 
-        Suggestion suggestion = Suggestion.builder()
+        Suggestion s = Suggestion.builder()
                 .farm(farm)
                 .suggestedCrops(String.join(",", cropNames))
                 .suggestedFertilizers(
-                        fertilizers.stream()
+                        ferts.stream()
                                 .map(Fertilizer::getName)
                                 .collect(Collectors.joining(","))
                 )
                 .build();
 
-        return suggestionRepository.save(suggestion);
+        return repo.save(s);
     }
 
     @Override
     public Suggestion getSuggestion(Long id) {
-        return suggestionRepository.findById(id).orElse(null);
-    }
-
-    // ⭐ REQUIRED BY INTERFACE
-    @Override
-    public List<Suggestion> getSuggestionsByFarm(Long farmId) {
-        return suggestionRepository.findByFarmId(farmId);
+        return repo.findById(id).orElse(null);
     }
 }
