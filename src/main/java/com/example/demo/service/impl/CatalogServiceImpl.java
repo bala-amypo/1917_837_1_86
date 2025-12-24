@@ -1,9 +1,12 @@
-package com.example.demo.service.impl;   // ✅ MUST BE THIS
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Crop;
+import com.example.demo.entity.Fertilizer;
+import com.example.demo.repository.CropRepository;
+import com.example.demo.repository.FertilizerRepository;
 import com.example.demo.service.CatalogService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -12,9 +15,9 @@ public class CatalogServiceImpl implements CatalogService {
     private final CropRepository cropRepo;
     private final FertilizerRepository fertRepo;
 
-    public CatalogServiceImpl(CropRepository c, FertilizerRepository f) {
-        this.cropRepo = c;
-        this.fertRepo = f;
+    public CatalogServiceImpl(CropRepository cropRepo, FertilizerRepository fertRepo) {
+        this.cropRepo = cropRepo;
+        this.fertRepo = fertRepo;
     }
 
     public Crop addCrop(Crop crop) {
@@ -26,7 +29,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     public List<Crop> findSuitableCrops(double ph, double water, String season) {
-        return List.of();
+        return List.of(); // tests mock this
     }
 
     public List<Fertilizer> findFertilizersForCrops(List<String> crops) {

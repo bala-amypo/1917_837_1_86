@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Farm;
-
 import java.util.List;
 
 public interface FarmService {
@@ -9,4 +8,3 @@ public interface FarmService {
     Farm getFarmById(Long id);
     List<Farm> getFarmsByOwner(Long ownerId);
 }
-
