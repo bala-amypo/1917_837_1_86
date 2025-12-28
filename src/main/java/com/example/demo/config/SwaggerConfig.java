@@ -14,17 +14,10 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    // ✅ REQUIRED FOR HIDDEN TESTS
-    @Bean
-    public Object api() {
-        // Tests only check method existence
-        return new Object();
-    }
-
-    // ✅ REAL OPENAPI CONFIG (SAFE TO KEEP)
     @Bean
     public OpenAPI customOpenAPI() {
 
+        // JWT Bearer Security Scheme
         SecurityScheme bearerAuth = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
@@ -33,9 +26,12 @@ public class SwaggerConfig {
                 .name("Authorization");
 
         return new OpenAPI()
+                // Server URL (VERY IMPORTANT)
                 .servers(List.of(
-                        new Server().url("https://9305.408procr.amypo.ai")
+                        new Server().url("https://9305.408procr.amypo.ai/")
                 ))
+
+                // Security configuration
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", bearerAuth)
                 )
