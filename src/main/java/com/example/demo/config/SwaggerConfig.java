@@ -14,16 +14,22 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 
+    // ✅ Method EXPECTED by test cases
     @Bean
+    public OpenAPI api() {
+        return customOpenAPI();
+    }
+
+    // ✅ Your existing implementation (UNCHANGED)
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
 
-                // ✅ EXISTING SERVER CONFIG (UNCHANGED)
+                // Server URL
                 .servers(List.of(
                         new Server().url("https://9305.408procr.amypo.ai")
                 ))
 
-                // ✅ ADD JWT SECURITY SCHEME
+                // JWT Security Scheme
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
@@ -33,7 +39,7 @@ public class SwaggerConfig {
                         )
                 )
 
-                // ✅ APPLY SECURITY GLOBALLY
+                // Apply security globally
                 .addSecurityItem(
                         new SecurityRequirement().addList("bearerAuth")
                 );
