@@ -18,12 +18,10 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
 
-                // ✅ EXISTING SERVER CONFIG (UNCHANGED)
                 .servers(List.of(
                         new Server().url("https://9305.408procr.amypo.ai/")
                 ))
 
-                // ✅ ADD JWT SECURITY SCHEME
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
